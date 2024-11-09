@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>HandMe</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='app/css/bootstrap.min.css') }}">
+    <!-- Style CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='app/css/style.css') }}">
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', path='app/css/responsive.css') }}">
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', path='utils_img/favicon.png') }}" type="image/gif">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', path='app/css/jquery.mCustomScrollbar.min.css') }}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Owl Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', path='app/css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+</head>
+<body>
+<!-- banner bg main start -->
+<div class="banner_bg_main">
+    <!-- header top section start -->
+    <div class="container">
+        <div class="header_section_top">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="custom_menu">
+                        <ul>
+                            <li><a href="#">Best Sellers</a></li>
+                            <li><a href="#">Gift Ideas</a></li>
+                            <li><a href="#">New Releases</a></li>
+                            <li><a href="#">Today's Deals</a></li>
+                            <li><a href="#">Customer Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header top section start -->
+    <!-- logo section start -->
+    <div class="logo_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="logo">
+                        <a href="{{ url_for('home') }}">
+                            <div class="title_logo"><b>Handme</b></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- logo section end -->
+    <!-- header section start -->
+    <div class="header_section">
+        <div class="container">
+            <div class="containt_main">
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    {% if current_user %}
+                        <div class="user-info">
+                            <a href="{{ url_for('profile') }}">
+                                <img src="{{ url_for('static', path=current_user.profile.profile_picture) }}" alt="{{ current_user.username }}" class="user-icon">
+                                <br>Welcome,<br> {{ current_user.username|title }}!
+                            </a>
+                        </div>
+                        <a href="{{ url_for('home') }}">Home</a>
+                        <a href="{{ url_for('new_product') }}">Add Product</a>
+                        <form method="post" action="{{ url_for('logout') }}">
+                            <button class="logout-btn" type="submit" >Logout</button>
+                        </form>
+
+                        <form id="delete-form" method="POST" action="{{ url_for('delete_account') }}">
+                            <button type="button" onclick="confirmDelete()" class="delete-account-btn">Delete Account</button>
+                        </form>
+                    {% else %}
+                        <a class="sign_in_btn" href="{{ url_for('login_form') }}">Sign In</a>
+                        <a href="{{ url_for('home') }}">Home</a>
+                    {% endif %}
+                </div>
+                <span class="toggle_icon" onclick="openNav()"><img src="{{ url_for('static', path='utils_img/toggle-icon.png') }}"
+                                                                   alt="toggle_icon"></span>
+                <!-- Category Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if selected_category %}
+                            {% for category in categories %}
+                                {% if category.id == selected_category|int %}
+                                    {{ category.name }}
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            All Categories
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="{{ url_for('home') }}?location={{ selected_location }}&q={{ query }}&category={{ '' }}">All Categories</a>
+                        {% for category in categories %}
+                            <a class="dropdown-item" href="{{ url_for('home') }}?category={{ category.id }}&location={{ selected_location }}&q={{ query }}">
+                                {{ category.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="main">
+                    <!-- Another variation with a button -->
+                    <!-- Search Box -->
+                    <form method="GET" action="{{ url_for('home') }}">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Search products..." value="{{ request.query_params.get('q', '') }}">
+                            <input type="hidden" name="category" value="{{ selected_category }}">
+                            <input type="hidden" name="location" value="{{ selected_location }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="submit" style="background-color: #f26522; border-color:#f26522 ">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="header_box">
+                    <div class="location_box ">
+                        <a href="#" title="Location" class="nav-link" data-toggle="dropdown" aria-expanded="true">
+                            {% if selected_location %}
+                                {% for location in locations %}
+                                    {% if location == selected_location %}
+                                        {{ location }} <i class="fa fa-angle-down ml-2" aria-hidden="true"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                Everywhere <i class="fa fa-angle-down ml-2" aria-hidden="true"></i>
+                            {% endif %}
+                        </a>
+                        <div class="dropdown-menu ">
+                            <a class="dropdown-item" href="{{ url_for('home') }}?category={{ selected_category }}&q={{ query }}&location={{ '' }}">Everywhere</a>
+                            {% for location in locations %}
+                                <a href="{{ url_for('home') }}?location={{ location }}&category={{ selected_category }}&q={{ query }}" class="dropdown-item">
+                                    {{ location }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="login_menu">
+                        {% if not current_user %}
+                            <ul>
+                                <li><a href="#">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                    <span class="padding_10">Login</span></a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header section end -->
+    <!-- pop up start -->
+    <div id="delete-popup" class="popup-overlay">
+        <div class="popup-content">
+            <h3>Confirm Account Deletion</h3>
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+            <button onclick="submitDelete()" class="confirm-btn">Yes, Delete</button>
+            <button onclick="closePopup()" class="cancel-btn">Cancel</button>
+        </div>
+    </div>
+    <!-- pop up end -->
+    <!-- banner section start -->
+    <div class="banner_section layout_padding">
+        <div class="container">
+            <div id="my_slider" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h1 class="banner_taital">Get Start <br>Your favorite shopping</h1>
+                                <div class="buynow_bt"><a href="#">Buy Now</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h1 class="banner_taital">Get Start <br>Your favorite shopping</h1>
+                                <div class="buynow_bt"><a href="#">Buy Now</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h1 class="banner_taital">Get Start <br>Your favorite shopping</h1>
+                                <div class="buynow_bt"><a href="#">Buy Now</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#my_slider" role="button" data-slide="prev">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                <a class="carousel-control-next" href="#my_slider" role="button" data-slide="next">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- banner section end -->
+</div>
+<!-- banner bg main end -->
+
+<div class="fashion_section">
+    {% if query %}
+        <h2>Search results for "{{ query }}": {{ products | length }} result(s) found.</h2>
+    {% endif %}
+
+    <div class="container">
+        <div class="product-grid"> <!-- here a changing to product-grid -->
+            {% if not products %}
+                <h1 class="my-products-title">No product yet!</h1>
+            {% else %}
+            {% for product in products %}
+                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="product-link">
+                    <div class="container">
+                        <div class="fashion_section_2">
+                            <div class="col-lg-10 col-sm-10">
+                                <div class="row">
+                                    <div class="product-card">
+                                        <h4 class="product_name">{{ product.name }}</h4>
+                                        {% if product.image %}
+                                            <div class="img">
+                                                <img src="{{ url_for('static', path=product.image) }}" alt="{{ product.title }}">
+                                            </div>
+                                        {% else %}
+                                            <div class="product_img">
+                                                <img src="{{ url_for('static', path='utils_img/default_product.png') }}" alt="Default Image">
+                                            </div>
+                                            <!-- Placeholder for missing images -->
+                                        {% endif %}
+                                        <p class="description">{{ product.description }}</p>
+                                        <p class="price">${{ product.price }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- footer section start -->
+<div class="footer_section layout_padding">
+    <div class="container">
+        <div class="footer_logo">
+            <a href="{{ url_for('home') }}">
+{#                <img src="{% static 'utils_img/handme-logo.png' %}">#}
+                <div class="title_logo"><b>Handme</b></div>
+            </a>
+        </div>
+        <div class="input_bt">
+            <input type="text" class="mail_bt" placeholder="Your Email" name="Your Email">
+            <span class="subscribe_bt" id="basic-addon2"><a href="#">Subscribe</a></span>
+        </div>
+        <div class="footer_menu">
+            <ul>
+                <li><a href="#">Best Sellers</a></li>
+                <li><a href="#">Gift Ideas</a></li>
+                <li><a href="#">New Releases</a></li>
+                <li><a href="#">Today's Deals</a></li>
+                <li><a href="#">Customer Service</a></li>
+            </ul>
+        </div>
+        <div class="location_main">Help Line Number : <a href="#">+1 1800 1200 1200</a></div>
+    </div>
+</div>
+<!-- footer section end -->
+
+<!-- copyright section start -->
+<div class="copyright_section">
+    <div class="container">
+        <p class="copyright_text">© 2020 All Rights Reserved. Design by <a href="https://html.design">Free html
+            Templates</a></p>
+    </div>
+</div>
+<!-- copyright section end -->
+<!-- Javascript files-->
+<script src="{{ url_for('static', path='app/js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', path='app/js/popper.min.js') }}"></script>
+<script src="{{ url_for('static', path='app/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', path='app/js/jquery-3.0.0.min.js') }}"></script>
+<script src="{{ url_for('static', path='app/js/plugin.js') }}"></script>
+<script src="{{ url_for('static', path='app/js/script.js') }}"></script>
+<!-- sidebar -->
+<script src="{{ url_for('static', path='app/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+<script src="{{ url_for('static', path='app/js/custom.js') }}"></script>
+</body>
+</html>

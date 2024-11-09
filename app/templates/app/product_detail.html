@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='app/css/style.css') }}">
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif; /* Modern font */
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa; /* Light background for contrast */
+        }
+
+        .container {
+            max-width: 1200px; /* Centered layout */
+            margin: 20px auto; /* Space around the container */
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            background-color: white; /* White background for the card */
+            border-radius: 8px; /* Rounded corners */
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: #007bff; /* Bootstrap primary color */
+            font-size: 16px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .product-detail {
+            display: flex;
+            align-items: flex-start; /* Align items at the start */
+        }
+
+        .image-section {
+            flex: 1; /* Flexbox to make image section responsive */
+            max-width: 400px; /* Limit image size */
+        }
+
+        .product-image {
+            width: 100%; /* Responsive image */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 8px; /* Rounded image corners */
+        }
+
+        .info-section {
+            flex: 2; /* Take more space for info section */
+            padding-left: 20px; /* Space between image and info */
+        }
+
+        .product-title {
+            font-size: 24px; /* Larger title font size */
+            color: #333; /* Dark text color */
+            margin: 0;
+        }
+
+        .price {
+            font-size: 20px; /* Highlight price */
+            color: #f26522;
+            margin: 10px 0;
+        }
+
+        .description {
+            font-size: 16px; /* Description font size */
+            line-height: 1.5; /* Better readability */
+            margin: 10px 0;
+        }
+
+        .btn {
+            padding: 10px 15px; /* Button padding */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded button */
+            background-color: #007bff; /* Button color */
+            color: white; /* White text */
+            font-size: 16px; /* Button font size */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s; /* Smooth hover effect */
+        }
+
+        .btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('home') }}" class="back-button">← Back to Home</a>
+        <div class="product-detail">
+            <div class="image-section">
+                {% if product.image %}
+                    <img src="{{ url_for('static', path=product.image) }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                    <img src="{{ url_for('static', path='utils_img/default_product.png') }}" alt="Default Image" class="product-image">
+                {% endif %}
+            </div>
+            <div class="info-section">
+                <h1 class="product-title">{{ product.name }}</h1>
+                <p class="price">${{ product.price }}</p>
+                <p class="description">{{ product.description }}</p>
+                <div class="button-section">
+                {% if product.creator == current_user %}
+                    <a href="{{ url_for('product_edit', product_id=product.id) }}" class="edit-btn">Edit Product</a>
+                {% else %}
+                    <button class="btn">Call Seller</button>
+                {% endif %}
+            </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

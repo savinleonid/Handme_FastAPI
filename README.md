@@ -12,15 +12,21 @@ and deleting accounts.
   
   ![register.png](app/static/readme/register.png)
   ![login.png](app/static/readme/login.png)
+
 - **Profile Management**: Users can view and update their profile information, including changing their profile picture
   or deleting their account.
+
   ![profile_1.png](app/static/readme/profile.png)
+
 - **Product Listings**: Products are displayed on the main page in a grid layout. Users can filter products by category
   or location, and search for specific products.
+
   ![main_page.png](app/static/readme/main_page.png)
   ![loged_in.png](app/static/readme/loged_in.png)
+
 - **Product Management**: Each product has its own detail page, allowing users to either contact the seller or edit the
   product if they are the creator.
+
   ![prod_card_others.png](app/static/readme/prod_card_others.png)
   ![prod_card_mine.png](app/static/readme/prod_card_mine.png)
 

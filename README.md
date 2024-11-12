@@ -9,6 +9,7 @@ and deleting accounts.
 
 - **User Registration & Authentication**: Users can register using a username and password, and the application ensures
   password validation during registration. Users can log in, log out, and manage their sessions using JWT tokens.
+  
   ![register.png](app/static/readme/register.png)
   ![login.png](app/static/readme/login.png)
 - **Profile Management**: Users can view and update their profile information, including changing their profile picture

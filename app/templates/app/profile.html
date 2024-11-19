@@ -128,9 +128,11 @@
 <div class="container">
     <div class="profile-header">
         <h1>{{ current_user.username|title }}'s Profile</h1>
-        <img id="profile_picture" src="{{ url_for('static', path=current_user.profile.profile_picture) }}" alt="Profile Picture" class="profile-picture" onclick="document.getElementById('uploadInput').click();">
+        <img id="profile_picture" src="{{ url_for('static', path=current_user.profile.profile_picture) }}"
+             alt="Profile Picture" class="profile-picture" onclick="document.getElementById('uploadInput').click();">
         <form id="uploadForm" method="POST" enctype="multipart/form-data" action="{{ url_for('profile') }}">
-            <input type="file" id="uploadInput" name="profile_picture" style="display: none;" onchange="document.getElementById('uploadForm').submit();">
+            <input type="file" id="uploadInput" name="profile_picture" style="display: none;"
+                   onchange="document.getElementById('uploadForm').submit();">
         </form>
     </div>
 
@@ -150,7 +152,8 @@
                             </div>
                         {% else %}
                             <div class="product_img">
-                                <img src="{{ url_for('static', path='utils_img/default_product.png') }}" alt="Default Image">
+                                <img src="{{ url_for('static', path='utils_img/default_product.png') }}"
+                                     alt="Default Image">
                             </div>
                         {% endif %}
                         <p class="description">{{ product.description }}</p>

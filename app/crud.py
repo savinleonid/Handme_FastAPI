@@ -1,15 +1,57 @@
 # app/crud.py
+from datetime import timedelta, datetime, timezone
 
+from fastapi import Depends, Request
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
+from app.database import get_db
 from app.models import User, Profile
 from app.schemas import UserCreate
+from config import ACCESS_TOKEN_EXPIRE_MINUTES
+from . import SECRET_KEY, ALGORITHM
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
+def get_current_user(request: Request, db: Session = Depends(get_db)):
+    # Retrieve the token from the cookies
+    token = request.cookies.get("access_token")
+
+    if token is None:
+        return None
+
+    try:
+        # If the token contains "Bearer ", split it to extract the actual token
+        token = token.split(" ")[1] if " " in token else token
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            return None
+    except JWTError:
+        return None
+
+    user = get_user_by_username(db, username=username)
+    if user is None:
+        return None
+    return user
+
+
 def get_password_hash(password):
     return pwd_context.hash(password)
+
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
 
 def get_user_by_username(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()

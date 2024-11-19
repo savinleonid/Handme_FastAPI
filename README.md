@@ -77,6 +77,12 @@ and deleting accounts.
       first migration.
 
 7. Apply migrations:
+8. ```sh
+   alembic init alembic
+   ```
+   ```sh
+   alembic revision --autogenerate -m "Initial migration"
+   ```
    ```sh
    alembic upgrade head
    ```

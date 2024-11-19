@@ -4,14 +4,6 @@ from pydantic import BaseModel, field_validator
 from pydantic_core.core_schema import FieldValidationInfo
 
 
-class UserLogin(BaseModel):
-    username: str
-    password: str
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
 class UserCreate(BaseModel):
     username: str
     password: str
